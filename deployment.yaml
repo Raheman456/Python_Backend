@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "python-backend.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "python-backend.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "python-backend.name" . }}
+    spec:
+      containers:
+      - name: python-backend
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 80
+        env:
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: github-secret
+              key: token
+        - name: INFLUXDB_URL
+          value: "{{ .Values.env.INFLUXDB_URL }}"
+        - name: INFLUXDB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: influxdb-secret
+              key: token
+        - name: INFLUXDB_ORG
+          value: "{{ .Values.env.INFLUXDB_ORG }}"
+        - name: INFLUXDB_BUCKET
+          value: "{{ .Values.env.INFLUXDB_BUCKET }}"
