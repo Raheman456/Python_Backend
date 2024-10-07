@@ -1,0 +1,19 @@
+replicaCount: 1
+
+image:
+  repository: your-python-backend-image
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+env:
+  GITHUB_TOKEN: ""
+  INFLUXDB_URL: "http://influxdb-service:8086"
+  INFLUXDB_TOKEN: ""
+  INFLUXDB_ORG: ""
+  INFLUXDB_BUCKET: "github_metrics"
+
+resources: {}
